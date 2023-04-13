@@ -27,13 +27,41 @@ const ensureMovieExists = async (
 
   if (!queryResult.rowCount) {
     return response.status(404).json({
-      message: `"error": "Movie not found!"`,
+      message: "Movie not found!",
     });
   }
 
   return next();
 };
 
+const ensureNameExists = async (request: Request, response: Response, next: NextFunction) => {
+  const bodyRequest = request.body
+
+  const queryString: string = `
+      SELECT 
+          name
+      FROM
+          movies
+      WHERE 
+          movies.name = $1;
+  `
+
+  const queryConfig: QueryConfig = {
+      text: queryString,
+      values: [bodyRequest.name]
+  }
+
+  const queryResult = await client.query(queryConfig)
+
+  if(queryResult.rows[0]){
+      return response.status(401).json({
+          message: "Name already exists!"
+      })
+  }
+
+  return next()
+}
 
 
-export { ensureMovieExists };
+
+export { ensureMovieExists, ensureNameExists };
