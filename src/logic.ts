@@ -28,16 +28,21 @@ const createMovieLogic = async (request: Request, response: Response): Promise<R
 }
 
 const listAllMoviesLogic = async (request: Request, response: Response): Promise<Response> => {
+    const { category } = request.query
 
     const queryString: string = `
         SELECT
-            *
+            *   
         FROM 
             movies;
     `
     const queryResult = await client.query(queryString)
+    
+    const filterCategory = category ? 
+        queryResult.rows.filter(categories => categories.category.includes(category))
+        : queryResult.rows[0]
 
-    return response.status(200).json(queryResult.rows)
+    return response.status(200).json(filterCategory)
 }
 
 const listMovieLogic = async (request: Request, response: Response): Promise<Response> => {

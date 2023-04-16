@@ -54,7 +54,7 @@ const ensureNameExists = async (request: Request, response: Response, next: Next
   const queryResult = await client.query(queryConfig)
 
   if(queryResult.rows[0]){
-      return response.status(401).json({
+      return response.status(409).json({
           message: "Name already exists!"
       })
   }
