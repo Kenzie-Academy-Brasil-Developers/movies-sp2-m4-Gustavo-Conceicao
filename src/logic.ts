@@ -40,7 +40,7 @@ const listAllMoviesLogic = async (request: Request, response: Response): Promise
     
     const filterCategory = category ? 
         queryResult.rows.filter(categories => categories.category.includes(category))
-        : queryResult.rows[0]
+        : queryResult.rows
 
     return response.status(200).json(filterCategory)
 }
